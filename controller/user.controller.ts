@@ -10,9 +10,10 @@ export class UserController {
     }
 
     async createUser(req: Request, res:Response){
-        const { name, username, password, email} = req.body;
+        console.log(req.body);
+        const { fullName, username, password, email} = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = { name, username, password: hashedPassword, email}
+        const user = { name: fullName, username, password: hashedPassword, email}
 
         try {
             const userServices = new UserService();
@@ -34,11 +35,11 @@ export class UserController {
     async login(req: Request, res:Response){
         const { username, password } = req.body;
 
-        const jwtService = new JwtService(); // Instanciar el servicio JWT
+        const jwtService = new JwtService();
 
         try {
             const userService = new UserService();
-            const user = await userService.findByUsername(username)
+            const user = await userService.findByUsername(username);
 
             if(!user){
                 return res.status(404).json({ message: 'Usuario no encontrado' });
@@ -56,13 +57,6 @@ export class UserController {
                 // Enviar la respuesta con el token y los datos del usuario (sin la contraseña)
                 return res.json({
                     msg: "Login successful",
-                    user: {
-                        id: user.id,
-                        username: user.username,
-                        email: user.email,
-                        fullName: user.name,
-                        role: user.role,
-                    },
                     token: token
                 });
 

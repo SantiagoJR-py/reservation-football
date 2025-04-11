@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SessionController = void 0;
-const session_service_1 = require("../server/session.service");
+const session_service_1 = require("../service/session.service");
 class SessionController {
     constructor() {
     }

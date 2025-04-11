@@ -21,9 +21,10 @@ class UserController {
     }
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { name, username, password, email } = req.body;
+            console.log(req.body);
+            const { fullName, username, password, email } = req.body;
             const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-            const user = { name, username, password: hashedPassword, email };
+            const user = { name: fullName, username, password: hashedPassword, email };
             try {
                 const userServices = new user_service_1.UserService();
                 yield userServices.createUser(user);
@@ -42,7 +43,7 @@ class UserController {
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { username, password } = req.body;
-            const jwtService = new jwt_service_1.JwtService(); // Instanciar el servicio JWT
+            const jwtService = new jwt_service_1.JwtService();
             try {
                 const userService = new user_service_1.UserService();
                 const user = yield userService.findByUsername(username);
@@ -59,13 +60,6 @@ class UserController {
                 // Enviar la respuesta con el token y los datos del usuario (sin la contraseña)
                 return res.json({
                     msg: "Login successful",
-                    user: {
-                        id: user.id,
-                        username: user.username,
-                        email: user.email,
-                        fullName: user.name,
-                        role: user.role,
-                    },
                     token: token
                 });
             }

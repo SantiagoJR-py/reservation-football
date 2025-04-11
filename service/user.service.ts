@@ -6,6 +6,7 @@ export class UserService {
     }
 
     async createUser(userData: any ) {
+      console.log("DATA: ",userData);
         try {
           const newUser = await User.create(userData);
           return newUser;
@@ -22,8 +23,8 @@ export class UserService {
             });
             return user;
         } catch (error) {
-            console.error('Error al buscar el usuario por username:', error);
-            throw new Error('No se pudo realizar la búsqueda del usuario.');
+            console.error('Error username:', error);
+            throw new Error('Not Found User.');
         }
     }
 

@@ -19,6 +19,7 @@ class UserService {
     }
     createUser(userData) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("DATA: ", userData);
             try {
                 const newUser = yield user_model_1.default.create(userData);
                 return newUser;
@@ -38,8 +39,8 @@ class UserService {
                 return user;
             }
             catch (error) {
-                console.error('Error al buscar el usuario por username:', error);
-                throw new Error('No se pudo realizar la búsqueda del usuario.');
+                console.error('Error username:', error);
+                throw new Error('Not Found User.');
             }
         });
     }
