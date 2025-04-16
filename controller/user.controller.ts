@@ -51,12 +51,14 @@ export class UserController {
                     msg: "Invalid credentials"
                 });
             }
+
+
             
                 const token = jwtService.generateToken({ id: user.id, username: user.username });
 
-                // Enviar la respuesta con el token y los datos del usuario (sin la contraseña)
                 return res.json({
                     msg: "Login successful",
+                    user: { name: user.name, username: user.username, role: user.role },
                     token: token
                 });
 

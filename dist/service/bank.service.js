@@ -12,38 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserService = void 0;
-const user_model_1 = __importDefault(require("../model/user.model"));
-class UserService {
-    constructor() {
+exports.BankService = void 0;
+const bank_model_1 = __importDefault(require("../model/bank.model"));
+class BankService {
+    constructor(currentUserEmail) {
+        this.currentUserEmail = currentUserEmail;
     }
-    createUser(userData) {
+    getAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("DATA: ", userData);
-            try {
-                const newUser = yield user_model_1.default.create(userData);
-                return newUser;
-            }
-            catch (error) {
-                console.error('Error creating user:', error);
-                throw new Error('Unable to create user');
-            }
+            const bank = yield bank_model_1.default.findAll({
+                attributes: ['id', 'nit', 'name']
+            });
+            return bank;
         });
     }
-    findByUsername(username) {
+    getById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const user = yield user_model_1.default.findOne({
-                    where: { username },
-                    attributes: ['id', 'username', 'name', 'password', 'role']
-                });
-                return user === null || user === void 0 ? void 0 : user.get({ plain: true });
+            const bank = yield bank_model_1.default.findOne({
+                where: { id },
+                attributes: ['id', 'nit', 'name']
+            });
+            if (!bank) {
+                throw new Error(`Bank with ID ${id} not found`);
             }
-            catch (error) {
-                console.error('Error username:', error);
-                throw new Error('Not Found User.');
-            }
+            this.bank = bank;
+            return bank;
         });
     }
 }
-exports.UserService = UserService;
+exports.BankService = BankService;

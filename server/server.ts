@@ -6,6 +6,8 @@ import routerSession from '../router/session.router';
 import routerUser from '../router/user.router';
 import User from '../model/user.model';
 import Session from '../model/session.model';
+import Bank from '../model/bank.model';
+import { Reservation } from '../model/reservation.model';
 
 // Cargar variables del archivo .env
 dotenv.config();
@@ -51,7 +53,8 @@ syncDatabase = async () => {
   try {
     await User.sync({ force: false });  
     await Session.sync({ force: false }); 
-    // await Product.sync({ force: false });  // Usa `force: true` para eliminar tablas existentes y recrearlas
+    await Bank.sync({ force: false }); 
+    await Reservation.sync({ force: false }); 
     console.log("Tablas sincronizadas exitosamente");
   } catch (error) {
     console.error("Error al sincronizar las tablas:", error);

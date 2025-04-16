@@ -18,10 +18,11 @@ export class UserService {
 
       async findByUsername(username: string) {
         try {
-            const user = await User.findOne({
+            const user:any = await User.findOne({
                 where: { username },
+                attributes: ['id', 'username', 'name', 'password', 'role']
             });
-            return user;
+            return user?.get({ plain: true});
         } catch (error) {
             console.error('Error username:', error);
             throw new Error('Not Found User.');

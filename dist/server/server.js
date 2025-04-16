@@ -21,6 +21,8 @@ const session_router_1 = __importDefault(require("../router/session.router"));
 const user_router_1 = __importDefault(require("../router/user.router"));
 const user_model_1 = __importDefault(require("../model/user.model"));
 const session_model_1 = __importDefault(require("../model/session.model"));
+const bank_model_1 = __importDefault(require("../model/bank.model"));
+const reservation_model_1 = require("../model/reservation.model");
 // Cargar variables del archivo .env
 dotenv_1.default.config();
 class Server {
@@ -29,7 +31,8 @@ class Server {
             try {
                 yield user_model_1.default.sync({ force: false });
                 yield session_model_1.default.sync({ force: false });
-                // await Product.sync({ force: false });  // Usa `force: true` para eliminar tablas existentes y recrearlas
+                yield bank_model_1.default.sync({ force: false });
+                yield reservation_model_1.Reservation.sync({ force: false });
                 console.log("Tablas sincronizadas exitosamente");
             }
             catch (error) {
