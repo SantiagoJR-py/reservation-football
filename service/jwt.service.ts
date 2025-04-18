@@ -7,7 +7,7 @@ export class JwtService {
     this.secretKey = process.env.KEY!
   }
 
-  generateToken(payload: object, expiresIn: any | number = "1h"): string {
+  generateToken(payload: object, expiresIn: any | number = "2h"): string {
     return jwt.sign(payload, this.secretKey, { expiresIn });
   }
 

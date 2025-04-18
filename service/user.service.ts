@@ -1,4 +1,6 @@
 import User from "../model/user.model";
+import { JwtService } from "./jwt.service";
+import bcrypt from 'bcrypt';
 
 export class UserService {
     constructor(){
@@ -16,11 +18,11 @@ export class UserService {
         }
       }
 
-      async findByUsername(username: string) {
+      async findByEmail(email: string) {
         try {
             const user:any = await User.findOne({
-                where: { username },
-                attributes: ['id', 'username', 'name', 'password', 'role']
+                where: { email },
+                attributes: ['id', 'username', 'email', 'name', 'password', 'role']
             });
             return user?.get({ plain: true});
         } catch (error) {
@@ -29,4 +31,22 @@ export class UserService {
         }
     }
 
+    async loginUser(email: string, password: string) {
+      const user = await this.findByEmail(email);
+      const jwtService = new JwtService();
+    
+      if (!user) {
+        throw new Error('Usuario no encontrado');
+      }
+    
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+    
+      if (!isPasswordValid) {
+        throw new Error('Contraseña incorrecta');
+      }
+    
+      const token = jwtService.generateToken({id: user.id, name: user.name, email: user.email, role: user.role})
+    
+      return token;
+    }
 }

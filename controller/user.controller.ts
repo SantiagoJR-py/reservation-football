@@ -1,12 +1,18 @@
 import { Request, Response } from "express";
-import bcrypt from 'bcrypt';
 import { UserService } from "../service/user.service";
-import { JwtService } from "../service/jwt.service";
+import bcrypt from 'bcrypt';
 
 export class UserController {
 
     constructor(){
 
+    }
+
+    async getUser(req: Request, res:Response){
+        console.log("PASO")
+        res.status(201).json({
+            message: "User created successfully!",
+        })
     }
 
     async createUser(req: Request, res:Response){
@@ -33,34 +39,20 @@ export class UserController {
     }
 
     async login(req: Request, res:Response){
-        const { username, password } = req.body;
-
-        const jwtService = new JwtService();
+        const { email, password } = req.body;
 
         try {
+
+            if (!email) {
+                throw new Error('El email es requerido');
+            }
+    
+            if (!password) {
+                throw new Error('La contraseña es requerida');
+            }
+
             const userService = new UserService();
-            const user = await userService.findByUsername(username);
-
-            if(!user){
-                return res.status(404).json({ message: 'Usuario no encontrado' });
-            }
-        
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-            if (!isPasswordValid) {
-                return res.status(400).json({
-                    msg: "Invalid credentials"
-                });
-            }
-
-
-            
-                const token = jwtService.generateToken({ id: user.id, username: user.username });
-
-                return res.json({
-                    msg: "Login successful",
-                    user: { name: user.name, username: user.username, role: user.role },
-                    token: token
-                });
+            const user = await userService.loginUser(email, password);
 
         } catch (error) {
             return res.status(500).json({

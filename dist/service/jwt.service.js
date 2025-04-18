@@ -9,7 +9,7 @@ class JwtService {
     constructor() {
         this.secretKey = process.env.KEY;
     }
-    generateToken(payload, expiresIn = "1h") {
+    generateToken(payload, expiresIn = "2h") {
         return jsonwebtoken_1.default.sign(payload, this.secretKey, { expiresIn });
     }
     verifyToken(token) {

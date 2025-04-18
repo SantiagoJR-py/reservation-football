@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const user_model_1 = __importDefault(require("../model/user.model"));
+const jwt_service_1 = require("./jwt.service");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class UserService {
     constructor() {
     }
@@ -30,12 +32,12 @@ class UserService {
             }
         });
     }
-    findByUsername(username) {
+    findByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = yield user_model_1.default.findOne({
-                    where: { username },
-                    attributes: ['id', 'username', 'name', 'password', 'role']
+                    where: { email },
+                    attributes: ['id', 'username', 'email', 'name', 'password', 'role']
                 });
                 return user === null || user === void 0 ? void 0 : user.get({ plain: true });
             }
@@ -43,6 +45,21 @@ class UserService {
                 console.error('Error username:', error);
                 throw new Error('Not Found User.');
             }
+        });
+    }
+    loginUser(email, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield this.findByEmail(email);
+            const jwtService = new jwt_service_1.JwtService();
+            if (!user) {
+                throw new Error('Usuario no encontrado');
+            }
+            const isPasswordValid = yield bcrypt_1.default.compare(password, user.password);
+            if (!isPasswordValid) {
+                throw new Error('Contraseña incorrecta');
+            }
+            const token = jwtService.generateToken({ id: user.id, name: user.name, email: user.email, role: user.role });
+            return token;
         });
     }
 }

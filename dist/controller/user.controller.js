@@ -19,6 +19,14 @@ const jwt_service_1 = require("../service/jwt.service");
 class UserController {
     constructor() {
     }
+    getUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("PASO");
+            res.status(201).json({
+                message: "User created successfully!",
+            });
+        });
+    }
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log(req.body);
@@ -42,26 +50,26 @@ class UserController {
     }
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { username, password } = req.body;
+            const { email, password } = req.body;
             const jwtService = new jwt_service_1.JwtService();
             try {
+                if (!email) {
+                    throw new Error('El email es requerido'); // 👈 Error estándar
+                }
+                if (!password) {
+                    throw new Error('La contraseña es requerida');
+                }
                 const userService = new user_service_1.UserService();
-                const user = yield userService.findByUsername(username);
-                if (!user) {
-                    return res.status(404).json({ message: 'Usuario no encontrado' });
-                }
-                const isPasswordValid = yield bcrypt_1.default.compare(password, user.password);
-                if (!isPasswordValid) {
-                    return res.status(400).json({
-                        msg: "Invalid credentials"
-                    });
-                }
-                const token = jwtService.generateToken({ id: user.id, username: user.username });
-                return res.json({
-                    msg: "Login successful",
-                    user: { name: user.name, username: user.username, role: user.role },
-                    token: token
-                });
+                const user = yield userService.loginUser(email, password);
+                // if(!user){
+                //     return res.status(404).json({ message: 'Usuario no encontrado' });
+                // }
+                //     const token = jwtService.generateToken({ id: user.id, username: user.username });
+                //     return res.json({
+                //         msg: "Login successful",
+                //         user: { name: user.name, username: user.username, role: user.role },
+                //         token: token
+                //     });
             }
             catch (error) {
                 return res.status(500).json({

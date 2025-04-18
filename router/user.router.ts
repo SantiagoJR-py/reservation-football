@@ -1,13 +1,15 @@
 // src/routes/userRoutes.ts
 import { Router } from 'express';
 import { UserController } from '../controller/user.controller';
+import { tokenVerify } from '../middleware/auth.middleware';
 
 
 
 const routerUser = Router();
 const userController = new UserController();
 
-routerUser.post('/create', userController.createUser);
 routerUser.post('/login', userController.login);
+routerUser.post('/create', userController.createUser);
+routerUser.get('/getUser', tokenVerify, userController.getUser);
 
 export default routerUser;
