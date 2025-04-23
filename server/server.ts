@@ -8,6 +8,7 @@ import User from '../model/user.model';
 import Session from '../model/session.model';
 import Bank from '../model/bank.model';
 import { Reservation } from '../model/reservation.model';
+import routerBank from '../router/bank.router';
 
 // Cargar variables del archivo .env
 dotenv.config();
@@ -33,8 +34,9 @@ export class Server {
 }
 
 routes(){
-  this.app.use('/app/user', routerUser)
-  this.app.use('/app/session', routerSession)
+  this.app.use('/app/user', routerUser);
+  this.app.use('/app/session', routerSession);
+  this.app.use('/app/bank', routerBank);
 }
 
 middlewares() {

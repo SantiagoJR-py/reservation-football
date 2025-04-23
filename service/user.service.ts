@@ -8,7 +8,6 @@ export class UserService {
     }
 
     async createUser(userData: any ) {
-      console.log("DATA: ",userData);
         try {
           const newUser = await User.create(userData);
           return newUser;
@@ -46,7 +45,6 @@ export class UserService {
       }
     
       const token = jwtService.generateToken({id: user.id, name: user.name, email: user.email, role: user.role})
-    
       return token;
     }
 }

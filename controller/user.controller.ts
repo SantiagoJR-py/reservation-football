@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserService } from "../service/user.service";
 import bcrypt from 'bcrypt';
+import { json } from "sequelize";
 
 export class UserController {
 
@@ -39,7 +40,8 @@ export class UserController {
     }
 
     async login(req: Request, res:Response){
-        const { email, password } = req.body;
+        const email = req.body.email;
+        const password = req.body.password;
 
         try {
 
@@ -53,6 +55,9 @@ export class UserController {
 
             const userService = new UserService();
             const user = await userService.loginUser(email, password);
+            return res.status(200).json({
+                token: user
+            })
 
         } catch (error) {
             return res.status(500).json({

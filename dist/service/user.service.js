@@ -21,7 +21,6 @@ class UserService {
     }
     createUser(userData) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("DATA: ", userData);
             try {
                 const newUser = yield user_model_1.default.create(userData);
                 return newUser;

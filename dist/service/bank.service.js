@@ -15,25 +15,60 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BankService = void 0;
 const bank_model_1 = __importDefault(require("../model/bank.model"));
 class BankService {
-    constructor(currentUserEmail) {
-        this.currentUserEmail = currentUserEmail;
+    constructor(currentUserName) {
+        this.currentUserEmail = currentUserName;
     }
     getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             const bank = yield bank_model_1.default.findAll({
-                attributes: ['id', 'nit', 'name']
+                attributes: ['id', 'nit', 'name', 'state']
             });
             return bank;
         });
     }
-    getById(id) {
+    addBank(bank) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const newBank = yield bank_model_1.default.create(bank);
+                return newBank;
+            }
+            catch (error) {
+                console.error("Error create bank", error);
+            }
+        });
+    }
+    editBank(nit, name, state) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.bank) {
+                throw new Error('Not Found Bank');
+            }
+            this.bank.nit = nit;
+            this.bank.name = name;
+            this.bank.state = state;
+            yield this.bank.save();
+            return this.bank;
+        });
+    }
+    deleteBank(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield bank_model_1.default.destroy({
+                    where: { id: id }
+                });
+            }
+            catch (error) {
+                console.error(error);
+            }
+        });
+    }
+    getById(bankId) {
         return __awaiter(this, void 0, void 0, function* () {
             const bank = yield bank_model_1.default.findOne({
-                where: { id },
-                attributes: ['id', 'nit', 'name']
+                where: { id: bankId },
+                attributes: ['id', 'nit', 'name', 'state']
             });
             if (!bank) {
-                throw new Error(`Bank with ID ${id} not found`);
+                throw new Error(`Bank with ID ${bankId} not found`);
             }
             this.bank = bank;
             return bank;

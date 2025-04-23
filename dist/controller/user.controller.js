@@ -13,9 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_service_1 = require("../service/user.service");
-const jwt_service_1 = require("../service/jwt.service");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class UserController {
     constructor() {
     }
@@ -50,26 +49,20 @@ class UserController {
     }
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { email, password } = req.body;
-            const jwtService = new jwt_service_1.JwtService();
+            const email = req.body.email;
+            const password = req.body.password;
             try {
                 if (!email) {
-                    throw new Error('El email es requerido'); // 👈 Error estándar
+                    throw new Error('El email es requerido');
                 }
                 if (!password) {
                     throw new Error('La contraseña es requerida');
                 }
                 const userService = new user_service_1.UserService();
                 const user = yield userService.loginUser(email, password);
-                // if(!user){
-                //     return res.status(404).json({ message: 'Usuario no encontrado' });
-                // }
-                //     const token = jwtService.generateToken({ id: user.id, username: user.username });
-                //     return res.json({
-                //         msg: "Login successful",
-                //         user: { name: user.name, username: user.username, role: user.role },
-                //         token: token
-                //     });
+                return res.status(200).json({
+                    token: user
+                });
             }
             catch (error) {
                 return res.status(500).json({

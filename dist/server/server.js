@@ -23,6 +23,7 @@ const user_model_1 = __importDefault(require("../model/user.model"));
 const session_model_1 = __importDefault(require("../model/session.model"));
 const bank_model_1 = __importDefault(require("../model/bank.model"));
 const reservation_model_1 = require("../model/reservation.model");
+const bank_router_1 = __importDefault(require("../router/bank.router"));
 // Cargar variables del archivo .env
 dotenv_1.default.config();
 class Server {
@@ -54,6 +55,7 @@ class Server {
     routes() {
         this.app.use('/app/user', user_router_1.default);
         this.app.use('/app/session', session_router_1.default);
+        this.app.use('/app/bank', bank_router_1.default);
     }
     middlewares() {
         // Sirve los archivos estáticos desde la carpeta dist/src/uploads
