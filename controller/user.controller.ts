@@ -74,7 +74,7 @@ export class UserController {
     try {
       ImageService.getUploadMiddleware()(req, res, async (err) => {
         if (err) {
-          console.error("ERROR AL SUBIR IMAGEN:", err);
+          console.error("Error Upload Image:", err);
           return res.status(400).json({ success: false, message: err.message });
         }
 
@@ -82,7 +82,6 @@ export class UserController {
         const oldImage = req.body.oldImage;
 
         if (file) {
-          // Si hay imagen anterior, la eliminamos
           if (oldImage) {
             await ImageService.deleteImage(oldImage).catch(console.error);
           }
@@ -147,7 +146,8 @@ export class UserController {
       const userService = new UserService();
       const user = await userService.loginUser(email, password);
       return res.status(200).json({
-        token: user,
+        token: user.token,
+        user: user.user
       });
     } catch (error) {
       return res.status(500).json({

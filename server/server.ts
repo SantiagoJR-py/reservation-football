@@ -34,15 +34,13 @@ export class Server {
 }
 
 routes(){
-  this.app.use('/uploads', express.static(path.resolve(__dirname, '../../uploads')));
   this.app.use('/app/user', routerUser);
   this.app.use('/app/session', routerSession);
   this.app.use('/app/bank', routerBank);
 }
 
 middlewares() {
-  // Sirve los archivos estáticos desde la carpeta dist/src/uploads
-  this.app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+  this.app.use('/uploads', express.static(path.resolve(__dirname, '../../uploads')));
   this.app.use(express.json());
   const corsOptions = {
     origin: 'http://localhost:4200',

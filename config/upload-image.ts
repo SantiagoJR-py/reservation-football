@@ -41,7 +41,7 @@ export class ImageService {
   }
 
   static getRelativeImagePath(fileName: string): string {
-    return path.join('/', ImageService.RELATIVE_UPLOAD_PATH, fileName); // Devuelve algo como "/uploads/profile/archivo.jpg"
+    return path.join('/', ImageService.RELATIVE_UPLOAD_PATH, fileName);
   }
 
   static deleteImage(imageName: string): Promise<void> {

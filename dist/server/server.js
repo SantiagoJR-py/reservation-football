@@ -53,14 +53,12 @@ class Server {
         });
     }
     routes() {
-        this.app.use('/uploads', express_1.default.static(path_1.default.resolve(__dirname, '../../uploads')));
         this.app.use('/app/user', user_router_1.default);
         this.app.use('/app/session', session_router_1.default);
         this.app.use('/app/bank', bank_router_1.default);
     }
     middlewares() {
-        // Sirve los archivos estáticos desde la carpeta dist/src/uploads
-        this.app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, '../uploads')));
+        this.app.use('/uploads', express_1.default.static(path_1.default.resolve(__dirname, '../../uploads')));
         this.app.use(express_1.default.json());
         const corsOptions = {
             origin: 'http://localhost:4200',
