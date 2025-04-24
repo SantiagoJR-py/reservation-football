@@ -34,6 +34,7 @@ export class Server {
 }
 
 routes(){
+  this.app.use('/uploads', express.static(path.resolve(__dirname, '../../uploads')));
   this.app.use('/app/user', routerUser);
   this.app.use('/app/session', routerSession);
   this.app.use('/app/bank', routerBank);

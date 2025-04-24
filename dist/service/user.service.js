@@ -46,16 +46,71 @@ class UserService {
             }
         });
     }
+    getById(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield user_model_1.default.findOne({
+                where: {
+                    id: userId
+                }
+            });
+            if (!user) {
+                throw new Error('User Not Found');
+            }
+            this.user = user;
+        });
+    }
+    updateImage(urlImage) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.user) {
+                throw new Error('User Not Found');
+            }
+            this.user.urlImage = urlImage;
+            this.user.save();
+        });
+    }
+    updateUser(name, username, email, identification, address, birthdate) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.user) {
+                throw new Error('User Not Found');
+            }
+            try {
+                this.user.name = name;
+                this.user.username = username;
+                this.user.email = email;
+                this.user.identification = identification;
+                this.user.address = address;
+                this.user.birthdate = birthdate;
+                this.user.save();
+            }
+            catch (error) {
+                console.error("ERROR UPDATE: ", error);
+            }
+        });
+    }
+    getAllById(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield user_model_1.default.findOne({
+                where: {
+                    id: userId
+                },
+                attributes: ['id', 'name', 'username', 'email', 'role', 'identification', 'address', 'birthdate', 'urlImage']
+            });
+            if (!user) {
+                throw new Error('User Not Found');
+            }
+            return user.get({ plain: true });
+        });
+    }
     loginUser(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield this.findByEmail(email);
             const jwtService = new jwt_service_1.JwtService();
             if (!user) {
-                throw new Error('Usuario no encontrado');
+                throw new Error('User Not Found');
             }
             const isPasswordValid = yield bcrypt_1.default.compare(password, user.password);
             if (!isPasswordValid) {
-                throw new Error('Contraseña incorrecta');
+                throw new Error('Password Invalid');
             }
             const token = jwtService.generateToken({ id: user.id, name: user.name, email: user.email, role: user.role });
             return token;

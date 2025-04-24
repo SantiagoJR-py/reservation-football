@@ -15,15 +15,96 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const user_service_1 = require("../service/user.service");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const upload_image_1 = require("../config/upload-image");
 class UserController {
-    constructor() {
-    }
+    constructor() { }
     getUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("PASO");
+            const dataUser = req.headers.dataUser;
+            const user = {
+                id: dataUser.id,
+                name: dataUser.name,
+                role: dataUser.role,
+            };
             res.status(201).json({
-                message: "User created successfully!",
+                ok: true,
+                user,
             });
+        });
+    }
+    getAllByUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const dataUser = req.headers.dataUser;
+            const userId = dataUser.id;
+            const userService = new user_service_1.UserService();
+            try {
+                const user = yield userService.getAllById(userId);
+                res.status(201).json({
+                    ok: true,
+                    user,
+                });
+            }
+            catch (error) {
+                console.error("ERROR FIND USER: ", error);
+            }
+        });
+    }
+    update(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const dataUser = req.headers.dataUser;
+            const userId = dataUser.id;
+            const userUpdate = req.body.user;
+            const userService = new user_service_1.UserService();
+            try {
+                yield userService.getById(userId);
+                const user = yield userService.updateUser(userUpdate.name, userUpdate.username, userUpdate.email, userUpdate.identification, userUpdate.address, userUpdate.birthdate);
+                res.status(201).json({
+                    ok: true,
+                });
+            }
+            catch (error) {
+                console.error("ERROR FIND USER: ", error);
+            }
+        });
+    }
+    uploadImage(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const dataUser = req.headers.dataUser;
+            const userId = dataUser.id;
+            const userService = new user_service_1.UserService();
+            try {
+                upload_image_1.ImageService.getUploadMiddleware()(req, res, (err) => __awaiter(this, void 0, void 0, function* () {
+                    if (err) {
+                        console.error("ERROR AL SUBIR IMAGEN:", err);
+                        return res.status(400).json({ success: false, message: err.message });
+                    }
+                    const file = req.file;
+                    const oldImage = req.body.oldImage;
+                    if (file) {
+                        // Si hay imagen anterior, la eliminamos
+                        if (oldImage) {
+                            yield upload_image_1.ImageService.deleteImage(oldImage).catch(console.error);
+                        }
+                        // Obtener ruta relativa para exponer por frontend
+                        const relativeUrl = upload_image_1.ImageService.getRelativeImagePath(file.filename);
+                        yield userService.getById(userId);
+                        yield userService.updateImage(relativeUrl);
+                        return res.status(200).json({
+                            success: true,
+                            message: "Imagen actualizada",
+                            urlImage: relativeUrl, // Ruta como "/uploads/profile/abc123.jpg"
+                        });
+                    }
+                    else {
+                        return res
+                            .status(400)
+                            .json({ success: false, message: "No se recibió la imagen" });
+                    }
+                }));
+            }
+            catch (error) {
+                console.error("ERROR UPDATE IMAGE: ", error);
+            }
         });
     }
     createUser(req, res) {
@@ -40,9 +121,9 @@ class UserController {
                 });
             }
             catch (error) {
-                console.error('Error creating user:', error);
+                console.error("Error creating user:", error);
                 res.status(500).json({
-                    message: 'An error occurred while creating the user. Please try again later.',
+                    message: "An error occurred while creating the user. Please try again later.",
                 });
             }
         });
@@ -53,21 +134,21 @@ class UserController {
             const password = req.body.password;
             try {
                 if (!email) {
-                    throw new Error('El email es requerido');
+                    throw new Error("El email es requerido");
                 }
                 if (!password) {
-                    throw new Error('La contraseña es requerida');
+                    throw new Error("La contraseña es requerida");
                 }
                 const userService = new user_service_1.UserService();
                 const user = yield userService.loginUser(email, password);
                 return res.status(200).json({
-                    token: user
+                    token: user,
                 });
             }
             catch (error) {
                 return res.status(500).json({
                     msg: "Something went wrong during login",
-                    error
+                    error,
                 });
             }
         });

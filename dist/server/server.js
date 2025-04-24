@@ -53,6 +53,7 @@ class Server {
         });
     }
     routes() {
+        this.app.use('/uploads', express_1.default.static(path_1.default.resolve(__dirname, '../../uploads')));
         this.app.use('/app/user', user_router_1.default);
         this.app.use('/app/session', session_router_1.default);
         this.app.use('/app/bank', bank_router_1.default);

@@ -39,6 +39,10 @@ User.init({
         type: sequelize_1.DataTypes.STRING,
         allowNull: true, // Opcional
     },
+    urlImage: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true, // Opcional
+    },
     termsAndConditions: {
         type: sequelize_1.DataTypes.BOOLEAN,
         allowNull: true, // Opcional

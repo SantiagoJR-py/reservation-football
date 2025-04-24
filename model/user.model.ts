@@ -12,6 +12,7 @@ class User extends Model {
   public email?: string;  // Correo
   public identification?: string;  // Identificación
   public birthdate?: Date;  // Fecha de nacimiento
+  public urlImage?: string;  // Nombre de usuario
   public address?: string;  // Dirección
   public termsAndConditions?: boolean;  // Dirección
   public readonly createdAt!: Date;
@@ -50,6 +51,10 @@ User.init({
     allowNull: true,  // Opcional
   },
   address: {
+    type: DataTypes.STRING,
+    allowNull: true,  // Opcional
+  },
+  urlImage: {
     type: DataTypes.STRING,
     allowNull: true,  // Opcional
   },
