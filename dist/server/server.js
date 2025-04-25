@@ -24,6 +24,7 @@ const session_model_1 = __importDefault(require("../model/session.model"));
 const bank_model_1 = __importDefault(require("../model/bank.model"));
 const reservation_model_1 = require("../model/reservation.model");
 const bank_router_1 = __importDefault(require("../router/bank.router"));
+const security_router_1 = __importDefault(require("../router/security.router"));
 // Cargar variables del archivo .env
 dotenv_1.default.config();
 class Server {
@@ -56,6 +57,7 @@ class Server {
         this.app.use('/app/user', user_router_1.default);
         this.app.use('/app/session', session_router_1.default);
         this.app.use('/app/bank', bank_router_1.default);
+        this.app.use('/app/security', security_router_1.default);
     }
     middlewares() {
         this.app.use('/uploads', express_1.default.static(path_1.default.resolve(__dirname, '../../uploads')));
