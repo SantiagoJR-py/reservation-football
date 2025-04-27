@@ -6,10 +6,18 @@ class Session extends Model {
   public id!: number;
   public userAgent!: string; // Información completa del User Agent
   public browser!: string;  // Nombre del navegador
+  public ip?: string;  // Direccion Ip
   public device!: string;   // Tipo de dispositivo
-  public os!: string;       // Sistema operativo
-  public readonly createdAt!: Date; // Fecha de creación
-  public readonly updatedAt!: Date; // Fecha de actualización
+  public os!: string;     // Sistema operativo
+  public fingerPrint?: string;     // Huella Digital
+  public report?: string;     // Huella Digital
+  
+  public createdBy?: string;
+  public updatedBy?: string;
+  public deletedBy?: string;
+  public createdAt?: Date;
+  public updatedAt?: Date;
+  public deletionAt?: Date;
 }
 
 Session.init(
@@ -21,20 +29,56 @@ Session.init(
     },
     userAgent: {
       type: DataTypes.STRING,
-      allowNull: false, // Obligatorio
+      allowNull: true,
     },
     browser: {
       type: DataTypes.STRING,
-      allowNull: false, // Obligatorio
+      allowNull: true,
+    },
+    ip: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     device: {
       type: DataTypes.STRING,
-      allowNull: false, // Obligatorio
+      allowNull: true,
     },
     os: {
       type: DataTypes.STRING,
-      allowNull: false, // Obligatorio
+      allowNull: true,
     },
+    fingerPrint: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    report: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    createdBy: {
+      type: new DataTypes.STRING(255),
+      allowNull: true
+    },
+    updatedBy: {
+        type: new DataTypes.STRING(255),
+        allowNull: true
+    },
+    deletedBy: {
+        type: new DataTypes.STRING(255),
+        allowNull: true
+    },
+    createdAt: {
+        type: new DataTypes.DATE,
+        allowNull: true
+    },
+    updatedAt: {
+        type: new DataTypes.DATE,
+        allowNull: true
+    },
+    deletionAt: {
+        type: new DataTypes.DATE,
+        allowNull: true
+    }
   },
   {
     sequelize: sequelize,
