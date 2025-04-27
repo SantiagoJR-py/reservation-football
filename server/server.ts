@@ -7,9 +7,13 @@ import routerUser from '../router/user.router';
 import User from '../model/user.model';
 import Session from '../model/session.model';
 import Bank from '../model/bank.model';
-import { Reservation } from '../model/reservation.model';
+import { Reservation, setupReservationRelationships } from '../model/reservation.model';
 import routerBank from '../router/bank.router';
 import routerSecurity from '../router/security.router';
+import { sequelize } from '../config/connection.db';
+import ReservationDocument, { setupReservationDocumentRelationships } from '../model/reservation-document.model';
+import routerReservation from '../router/reservation.router';
+import routerReservationDocument from '../router/reservation-document.router';
 
 // Cargar variables del archivo .env
 dotenv.config();
@@ -39,6 +43,8 @@ routes(){
   this.app.use('/app/session', routerSession);
   this.app.use('/app/bank', routerBank);
   this.app.use('/app/security', routerSecurity);
+  this.app.use('/app/reservation', routerReservation);
+  this.app.use('/app/reservationDocument', routerReservationDocument);
 }
 
 middlewares() {
@@ -54,10 +60,20 @@ middlewares() {
 
 syncDatabase = async () => {
   try {
+    // await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await User.sync({ force: false });  
     await Session.sync({ force: false }); 
-    await Bank.sync({ force: false }); 
+    await Bank.sync({ force: false });
     await Reservation.sync({ force: false }); 
+    await ReservationDocument.sync({ force: false });
+    // 3. Reactivar FK checks
+    // await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+
+    //-------------------- Relaciones --------------------//
+
+    setupReservationRelationships();
+    setupReservationDocumentRelationships();
+
     console.log("Tablas sincronizadas exitosamente");
   } catch (error) {
     console.error("Error al sincronizar las tablas:", error);
