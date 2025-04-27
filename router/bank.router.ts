@@ -8,6 +8,7 @@ import { BankController } from '../controller/bank.controller';
 const routerBank = Router();
 const bankController = new BankController();
 
+routerBank.get('/findAll', bankController.getAll);
 routerBank.post('/create', tokenVerify, bankController.addBank);
 routerBank.post('/:bankId/edit', tokenVerify, bankController.editBank);
 routerBank.delete('/:bankId/delete', tokenVerify, bankController.deleteBank);

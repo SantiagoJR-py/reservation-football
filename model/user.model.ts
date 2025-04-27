@@ -1,6 +1,7 @@
 // models/User.ts
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../config/connection.db';
+import { Reservation } from './reservation.model';
 
 
 class User extends Model {
@@ -67,6 +68,11 @@ User.init({
   modelName: 'User',
   tableName: 'users',
   timestamps: true,
+});
+
+User.belongsTo(Reservation, {
+  foreignKey: 'userId',
+  as: 'Reservation'
 });
 
 export default User;

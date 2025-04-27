@@ -71,42 +71,43 @@ export class UserController {
     const dataUser: any = req.headers.dataUser;
     const userId = dataUser.id;
     const userService = new UserService();
+  
+    // Aquí defines tú mismo la carpeta relativa
+    const imageService = new ImageService('uploads/profile'); 
+  
     try {
-      ImageService.getUploadMiddleware()(req, res, async (err) => {
+      imageService.getUploadMiddleware()(req, res, async (err) => {
         if (err) {
           console.error("Error Upload Image:", err);
           return res.status(400).json({ success: false, message: err.message });
         }
-
+  
         const file = req.file;
         const oldImage = req.body.oldImage;
-
+  
         if (file) {
           if (oldImage) {
-            await ImageService.deleteImage(oldImage).catch(console.error);
+            await imageService.deleteImage(oldImage).catch(console.error);
           }
-
-          // Obtener ruta relativa para exponer por frontend
-          const relativeUrl = ImageService.getRelativeImagePath(file.filename);
+  
+          const relativeUrl = imageService.getRelativeImagePath(file.filename);
           await userService.getById(userId);
           await userService.updateImage(relativeUrl);
-
-
+  
           return res.status(200).json({
             success: true,
             message: "Imagen actualizada",
-            urlImage: relativeUrl, // Ruta como "/uploads/profile/abc123.jpg"
+            urlImage: relativeUrl, // Ej: /uploads/profile/abc123.jpg
           });
         } else {
-          return res
-            .status(400)
-            .json({ success: false, message: "No se recibió la imagen" });
+          return res.status(400).json({ success: false, message: "No se recibió la imagen" });
         }
       });
     } catch (error) {
-        console.error("ERROR UPDATE IMAGE: ", error);
+      console.error("ERROR UPDATE IMAGE: ", error);
     }
   }
+  
 
   async createUser(req: Request, res: Response) {
     console.log(req.body);

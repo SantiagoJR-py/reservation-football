@@ -3,16 +3,20 @@ import { sequelize } from "../config/connection.db";
 import User from "./user.model";
 import Bank from "./bank.model";
 import Session from "./session.model";
+import ReservationDocument from "./reservation-document.model";
 
 export class Reservation extends Model {
     public id!:number;
     public userId?:number;
     public sessionId?:number;
-    public name!:number;
+    public name!:string;
+    public email!:string;
+    public phone!:string;
     public deposit!:number;
     public bankId!:number;
     public date!: Date;
-    public rangeHours!:string;
+    public startTime!:string;
+    public endTime!:string;
     public time!: string;
 
 
@@ -42,6 +46,14 @@ Reservation.init({
         type: DataTypes.STRING(255),
         allowNull:false,
     },
+    email : {
+        type: DataTypes.STRING(255),
+        allowNull:false,
+    },
+    phone : {
+        type: DataTypes.STRING(255),
+        allowNull:false,
+    },
     deposit: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -51,10 +63,14 @@ Reservation.init({
         allowNull: false
     },
     date: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    startTime: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    rangeHours: {
+    endTime: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -95,17 +111,24 @@ Reservation.init({
     timestamps: true
 })
 
-Reservation.belongsTo(User, {
-    foreignKey: 'userId',
-    as: 'User'
-});
+export function setupReservationRelationships() {
+    Reservation.belongsTo(User, {
+        foreignKey: 'userId',
+        as: 'User'
+    });
 
-Reservation.belongsTo(Session, {
-    foreignKey: 'sessionId',
-    as: 'Session'
-});
+    Reservation.belongsTo(Session, {
+        foreignKey: 'sessionId',
+        as: 'Session'
+    });
 
-Reservation.belongsTo(Bank, {
-    foreignKey: 'bankId',
-    as: 'Bank'
-});
+    Reservation.belongsTo(Bank, {
+        foreignKey: 'bankId',
+        as: 'Bank'
+    });
+
+    Reservation.hasMany(ReservationDocument, {
+        foreignKey: 'reservationId',
+        as: 'Documents'
+    });
+}
