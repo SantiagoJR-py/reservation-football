@@ -10,7 +10,7 @@ export class BankService {
 
     async getAll(){
         const bank = await Bank.findAll({
-            attributes: ['id', 'nit', 'name', 'state']
+            attributes: ['id', 'accountNumber', 'name', 'state']
         })
 
         return bank;
@@ -25,12 +25,12 @@ export class BankService {
         }
     }
 
-    async editBank(nit:string, name:string, state:string){
+    async editBank(accountNumber:string, name:string, state:string){
         if (!this.bank) {
             throw new Error('Not Found Bank');
         }
 
-        this.bank.nit = nit;
+        this.bank.accountNumber = accountNumber;
         this.bank.name = name;
         this.bank.state = state;
 

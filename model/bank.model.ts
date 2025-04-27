@@ -4,7 +4,7 @@ import { sequelize } from "../config/connection.db";
 export interface BankInteface {
             
             id: number;
-            nit: string;
+            accountNumber: string;
             name: string;
             state: string;
 
@@ -18,7 +18,7 @@ export interface BankInteface {
 
 export default class Bank extends Model implements BankInteface {
     id!: number;
-    nit!: string;
+    accountNumber!: string;
     name!: string;
     state!: string;
 
@@ -36,7 +36,7 @@ Bank.init({
         autoIncrement: true,
         primaryKey: true
     },
-    nit: {
+    accountNumber: {
         type: DataTypes.STRING(255),
         allowNull: true
     },
