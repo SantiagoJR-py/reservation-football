@@ -11,7 +11,7 @@ Bank.init({
         autoIncrement: true,
         primaryKey: true
     },
-    nit: {
+    accountNumber: {
         type: sequelize_1.DataTypes.STRING(255),
         allowNull: true
     },

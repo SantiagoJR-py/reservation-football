@@ -72,8 +72,10 @@ class UserController {
             const dataUser = req.headers.dataUser;
             const userId = dataUser.id;
             const userService = new user_service_1.UserService();
+            // Aquí defines tú mismo la carpeta relativa
+            const imageService = new upload_image_1.ImageService('uploads/profile');
             try {
-                upload_image_1.ImageService.getUploadMiddleware()(req, res, (err) => __awaiter(this, void 0, void 0, function* () {
+                imageService.getUploadMiddleware()(req, res, (err) => __awaiter(this, void 0, void 0, function* () {
                     if (err) {
                         console.error("Error Upload Image:", err);
                         return res.status(400).json({ success: false, message: err.message });
@@ -82,22 +84,19 @@ class UserController {
                     const oldImage = req.body.oldImage;
                     if (file) {
                         if (oldImage) {
-                            yield upload_image_1.ImageService.deleteImage(oldImage).catch(console.error);
+                            yield imageService.deleteImage(oldImage).catch(console.error);
                         }
-                        // Obtener ruta relativa para exponer por frontend
-                        const relativeUrl = upload_image_1.ImageService.getRelativeImagePath(file.filename);
+                        const relativeUrl = imageService.getRelativeImagePath(file.filename);
                         yield userService.getById(userId);
                         yield userService.updateImage(relativeUrl);
                         return res.status(200).json({
                             success: true,
                             message: "Imagen actualizada",
-                            urlImage: relativeUrl, // Ruta como "/uploads/profile/abc123.jpg"
+                            urlImage: relativeUrl, // Ej: /uploads/profile/abc123.jpg
                         });
                     }
                     else {
-                        return res
-                            .status(400)
-                            .json({ success: false, message: "No se recibió la imagen" });
+                        return res.status(400).json({ success: false, message: "No se recibió la imagen" });
                     }
                 }));
             }

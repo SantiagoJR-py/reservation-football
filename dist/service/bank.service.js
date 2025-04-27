@@ -21,7 +21,7 @@ class BankService {
     getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             const bank = yield bank_model_1.default.findAll({
-                attributes: ['id', 'nit', 'name', 'state']
+                attributes: ['id', 'accountNumber', 'name', 'state']
             });
             return bank;
         });
@@ -37,12 +37,12 @@ class BankService {
             }
         });
     }
-    editBank(nit, name, state) {
+    editBank(accountNumber, name, state) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.bank) {
                 throw new Error('Not Found Bank');
             }
-            this.bank.nit = nit;
+            this.bank.accountNumber = accountNumber;
             this.bank.name = name;
             this.bank.state = state;
             yield this.bank.save();

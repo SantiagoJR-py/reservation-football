@@ -6,6 +6,7 @@ const auth_middleware_1 = require("../middleware/auth.middleware");
 const bank_controller_1 = require("../controller/bank.controller");
 const routerBank = (0, express_1.Router)();
 const bankController = new bank_controller_1.BankController();
+routerBank.get('/findAll', bankController.getAll);
 routerBank.post('/create', auth_middleware_1.tokenVerify, bankController.addBank);
 routerBank.post('/:bankId/edit', auth_middleware_1.tokenVerify, bankController.editBank);
 routerBank.delete('/:bankId/delete', auth_middleware_1.tokenVerify, bankController.deleteBank);

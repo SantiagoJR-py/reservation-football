@@ -15,7 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SessionService = void 0;
 const session_model_1 = __importDefault(require("../model/session.model"));
 class SessionService {
-    constructor() { }
+    constructor(currentUserName) {
+        this.currentUserEmail = currentUserName;
+    }
     add(session) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -25,6 +27,38 @@ class SessionService {
             catch (error) {
                 console.error('Error creating session:', error);
             }
+        });
+    }
+    getSessionByFingerPrint(fingerPrint) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const session = yield session_model_1.default.findOne({
+                where: {
+                    fingerPrint
+                }
+            });
+            if (!session) {
+                throw Error("Not Found FingerPrint");
+            }
+            this.session = session;
+        });
+    }
+    findByFingerPrint(fingerPrint) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const session = yield session_model_1.default.findAll({
+                where: {
+                    fingerPrint
+                }
+            });
+            return session.map((item) => item.get({ plain: true }));
+        });
+    }
+    addReport(report) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.session) {
+                throw Error("Not Found Session");
+            }
+            this.session.report = report;
+            this.session.save();
         });
     }
     getAll() {

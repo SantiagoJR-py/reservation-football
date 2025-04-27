@@ -3,12 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Reservation = void 0;
+exports.setupReservationRelationships = exports.Reservation = void 0;
 const sequelize_1 = require("sequelize");
 const connection_db_1 = require("../config/connection.db");
 const user_model_1 = __importDefault(require("./user.model"));
 const bank_model_1 = __importDefault(require("./bank.model"));
 const session_model_1 = __importDefault(require("./session.model"));
+const reservation_document_model_1 = __importDefault(require("./reservation-document.model"));
 class Reservation extends sequelize_1.Model {
 }
 exports.Reservation = Reservation;
@@ -30,6 +31,14 @@ Reservation.init({
         type: sequelize_1.DataTypes.STRING(255),
         allowNull: false,
     },
+    email: {
+        type: sequelize_1.DataTypes.STRING(255),
+        allowNull: false,
+    },
+    phone: {
+        type: sequelize_1.DataTypes.STRING(255),
+        allowNull: false,
+    },
     deposit: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
@@ -39,10 +48,14 @@ Reservation.init({
         allowNull: false
     },
     date: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false
+    },
+    startTime: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
     },
-    rangeHours: {
+    endTime: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
     },
@@ -80,15 +93,22 @@ Reservation.init({
     paranoid: true,
     timestamps: true
 });
-Reservation.belongsTo(user_model_1.default, {
-    foreignKey: 'userId',
-    as: 'User'
-});
-Reservation.belongsTo(session_model_1.default, {
-    foreignKey: 'sessionId',
-    as: 'Session'
-});
-Reservation.belongsTo(bank_model_1.default, {
-    foreignKey: 'bankId',
-    as: 'Bank'
-});
+function setupReservationRelationships() {
+    Reservation.belongsTo(user_model_1.default, {
+        foreignKey: 'userId',
+        as: 'User'
+    });
+    Reservation.belongsTo(session_model_1.default, {
+        foreignKey: 'sessionId',
+        as: 'Session'
+    });
+    Reservation.belongsTo(bank_model_1.default, {
+        foreignKey: 'bankId',
+        as: 'Bank'
+    });
+    Reservation.hasMany(reservation_document_model_1.default, {
+        foreignKey: 'reservationId',
+        as: 'Documents'
+    });
+}
+exports.setupReservationRelationships = setupReservationRelationships;

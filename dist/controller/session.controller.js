@@ -16,12 +16,20 @@ class SessionController {
     }
     add(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { userAgent, browser, device, os } = req.body;
+            console.log("LLEGA");
+            const { userAgent, ip, browser, device, os, fingerPrint, report } = req.body;
             const object = {
-                userAgent, browser, device, os
+                userAgent, browser, device, os, ip, fingerPrint, report
             };
             try {
-                const sessionService = new session_service_1.SessionService();
+                const sessionService = new session_service_1.SessionService('System');
+                const validFingerPrint = yield sessionService.findByFingerPrint(fingerPrint);
+                if (validFingerPrint.length > 0) {
+                    return res.status(200).json({
+                        msg: 'FingerPrint exist',
+                        fingerPrint
+                    });
+                }
                 const session = sessionService.add(object);
                 if (!session) {
                     return res.status(400).json({
@@ -30,6 +38,7 @@ class SessionController {
                 }
                 return res.status(201).json({
                     message: "Session created successfully!",
+                    fingerPrint
                 });
             }
             catch (error) {
@@ -43,7 +52,7 @@ class SessionController {
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const sessionService = new session_service_1.SessionService();
+                const sessionService = new session_service_1.SessionService('System');
                 const session = yield sessionService.getAll();
                 return res.status(200).json({
                     ok: true,

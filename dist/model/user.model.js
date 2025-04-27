@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // models/User.ts
 const sequelize_1 = require("sequelize");
 const connection_db_1 = require("../config/connection.db");
+const reservation_model_1 = require("./reservation.model");
 class User extends sequelize_1.Model {
 }
 User.init({
@@ -52,5 +53,9 @@ User.init({
     modelName: 'User',
     tableName: 'users',
     timestamps: true,
+});
+User.belongsTo(reservation_model_1.Reservation, {
+    foreignKey: 'userId',
+    as: 'Reservation'
 });
 exports.default = User;
