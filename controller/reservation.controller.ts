@@ -99,4 +99,31 @@ export class ReservationController {
       });
     }
   }
+
+  async getAll(req: Request, res: Response) {
+    const dataUser: any = req.headers.dataUser;
+    const reservationService = new ReservationService("dataUser.name");
+    
+    // Parámetros de paginación
+    const limit = Number(req.body.limit) || 10;
+    const page = Number(req.body.page) || 1;
+
+    try {
+      const { reservations, total } = await reservationService.getAll(limit, page);
+
+      return res.status(200).json({
+        Ok: true,
+        data: reservations,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit)
+      })
+    } catch (error) {
+      console.error("ERROR: ", error);
+      res.status(500).json({
+        Ok: false,
+        error: error
+      })
+    }
+}
 }

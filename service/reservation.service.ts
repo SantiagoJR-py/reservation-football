@@ -9,9 +9,29 @@ export class ReservationService {
         this.currentUserEmail = currentUserName;
     }
 
-    async getAll(){
-        const reservation = await Reservation.findAll();
-        return reservation;
+    async getAll(limit: number = 10, page: number = 1) {
+        // Contar el total de reservaciones
+        const total = await Reservation.count();
+        
+        const reservations = await Reservation.findAll({
+            attributes: ['id', 'name', 'phone', 'email', 'deposit', 'state', 'date', 'startTime', 'endTime','time'],
+            include: [
+                {
+                    association: 'Bank',
+                    attributes: ['id', 'name']
+                }
+            ],
+            order: [['createdAt', 'DESC']],
+            limit: limit,
+            offset: (page - 1) * limit
+        });
+
+        reservations.map((item:any) => item.get({ plain: true}))
+        
+        return {
+            reservations,
+            total
+        };
     }
 
     async getById(reservationId: number){
@@ -49,6 +69,7 @@ export class ReservationService {
                 deposit: deposit || null,
                 bankId: bankId || null,
                 date,
+                state: 'PENDING',
                 startTime,
                 endTime,
                 time,

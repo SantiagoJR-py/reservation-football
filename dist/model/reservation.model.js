@@ -51,6 +51,10 @@ Reservation.init({
         type: sequelize_1.DataTypes.DATE,
         allowNull: false
     },
+    state: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true
+    },
     startTime: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false

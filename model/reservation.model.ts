@@ -15,6 +15,7 @@ export class Reservation extends Model {
     public deposit!:number;
     public bankId!:number;
     public date!: Date;
+    public state!:string;
     public startTime!:string;
     public endTime!:string;
     public time!: string;
@@ -65,6 +66,10 @@ Reservation.init({
     date: {
         type: DataTypes.DATE,
         allowNull: false
+    },
+    state: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     startTime: {
         type: DataTypes.STRING,
