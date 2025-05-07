@@ -44,6 +44,27 @@ export class ReservationService {
         this.reservation = reservation
     }
 
+    async findByCode(code:string){
+        const reservation = await Reservation.findOne({
+            where: {
+                code
+            },
+            attributes:['name', 'code', 'phone', 'deposit', 'email', 'startTime', 'endTime', 'time', 'date', 'state'],
+            include: [
+                {
+                    association: 'Bank',
+                    attributes: ['id', 'name']
+                }
+            ]
+        })
+
+        if(!reservation){
+            throw Error("Not Found Reservation By Code");
+        }
+
+        return reservation;
+    }
+
     async create(
         name: string,
         deposit: number,

@@ -100,6 +100,27 @@ export class ReservationController {
     }
   }
 
+  async findByCode(req: Request, res: Response){
+    const code = req.body.code;
+    const reservationService = new ReservationService('System');
+
+    try {
+      const reservation = await reservationService.findByCode(code);
+      return res.status(200).json({
+        ok: true,
+        error: null,
+        reservation
+      })
+    } catch (error) {
+      console.error("ERROR: ", error);
+
+      return res.status(400).json({
+        err: true,
+        error,
+      });
+    }
+  }
+
   async getAll(req: Request, res: Response) {
     const dataUser: any = req.headers.dataUser;
     const reservationService = new ReservationService("dataUser.name");

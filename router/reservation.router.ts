@@ -9,7 +9,8 @@ const routerReservation = Router();
 const reservationController = new ReservationController();
 
 routerReservation.post('/create', reservationController.create);
-routerReservation.post('/getAll', reservationController.getAll)
+routerReservation.post('/findByCode', reservationController.findByCode)
+routerReservation.post('/getAll', tokenVerify, reservationController.getAll)
 routerReservation.post('/createToken', tokenVerify, reservationController.createToken);
 
 export default routerReservation;
