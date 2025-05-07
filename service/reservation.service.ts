@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 import { Reservation } from "../model/reservation.model";
 
 export class ReservationService {
@@ -14,7 +15,7 @@ export class ReservationService {
         const total = await Reservation.count();
         
         const reservations = await Reservation.findAll({
-            attributes: ['id', 'name', 'phone', 'email', 'deposit', 'state', 'date', 'startTime', 'endTime','time'],
+            attributes: ['id', 'name', 'phone', 'email', 'deposit', 'state', 'date', 'startTime', 'endTime','time', 'code'],
             include: [
                 {
                     association: 'Bank',
@@ -61,6 +62,7 @@ export class ReservationService {
             throw new Error("Missing required fields: name, date, startTime, endTime, time, phone, email");
         }
 
+        const code = this.generateShortCode();
         try {
             const newReservation = await Reservation.create({
                 sessionId: sessionId || null,
@@ -72,6 +74,7 @@ export class ReservationService {
                 state: 'PENDING',
                 startTime,
                 endTime,
+                code,
                 time,
                 email,
                 phone,
@@ -88,5 +91,16 @@ export class ReservationService {
             throw new Error("Failed to create reservation");
         }
     }
+
+    generateShortCode(): string {
+        const date = new Date().toISOString().split('T')[0];
+        
+        const hash = createHash('sha256')
+          .update(Math.random().toString())
+          .digest('hex')
+          .substring(0, 20);
+          
+        return `${date}-${hash}`;
+      }
 
 }

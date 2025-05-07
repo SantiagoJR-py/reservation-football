@@ -12,6 +12,7 @@ export class Reservation extends Model {
     public name!:string;
     public email!:string;
     public phone!:string;
+    public code!:string;
     public deposit!:number;
     public bankId!:number;
     public date!: Date;
@@ -52,6 +53,10 @@ Reservation.init({
         allowNull:false,
     },
     phone : {
+        type: DataTypes.STRING(255),
+        allowNull:false,
+    },
+    code : {
         type: DataTypes.STRING(255),
         allowNull:false,
     },

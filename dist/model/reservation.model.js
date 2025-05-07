@@ -39,6 +39,10 @@ Reservation.init({
         type: sequelize_1.DataTypes.STRING(255),
         allowNull: false,
     },
+    code: {
+        type: sequelize_1.DataTypes.STRING(255),
+        allowNull: false,
+    },
     deposit: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,

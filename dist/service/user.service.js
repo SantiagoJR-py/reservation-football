@@ -93,7 +93,7 @@ class UserService {
                 where: {
                     id: userId
                 },
-                attributes: ['id', 'name', 'username', 'email', 'role', 'identification', 'address', 'birthdate', 'urlImage']
+                attributes: ['id', 'name', 'username', 'email', 'role', 'identification', 'address', 'birthdate', 'urlImage', 'createdAt']
             });
             if (!user) {
                 throw new Error('User Not Found');
