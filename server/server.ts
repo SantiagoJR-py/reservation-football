@@ -14,6 +14,8 @@ import { sequelize } from '../config/connection.db';
 import ReservationDocument, { setupReservationDocumentRelationships } from '../model/reservation-document.model';
 import routerReservation from '../router/reservation.router';
 import routerReservationDocument from '../router/reservation-document.router';
+import Claim, { setupClaimRelationships } from '../model/claim.model';
+import routerClaim from '../router/claim.router';
 
 // Cargar variables del archivo .env
 dotenv.config();
@@ -45,6 +47,7 @@ routes(){
   this.app.use('/app/security', routerSecurity);
   this.app.use('/app/reservation', routerReservation);
   this.app.use('/app/reservationDocument', routerReservationDocument);
+  this.app.use('/app/claim', routerClaim);
 }
 
 middlewares() {
@@ -66,6 +69,7 @@ syncDatabase = async () => {
     await Bank.sync({ force: false });
     await Reservation.sync({ force: false }); 
     await ReservationDocument.sync({ force: false });
+    await Claim.sync({ force: false });
     // 3. Reactivar FK checks
     // await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
 
@@ -73,6 +77,7 @@ syncDatabase = async () => {
 
     setupReservationRelationships();
     setupReservationDocumentRelationships();
+    setupClaimRelationships();
 
     console.log("Tablas sincronizadas exitosamente");
   } catch (error) {
