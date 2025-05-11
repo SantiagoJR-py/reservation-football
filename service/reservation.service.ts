@@ -49,7 +49,7 @@ export class ReservationService {
             where: {
                 code
             },
-            attributes:['name', 'code', 'phone', 'deposit', 'email', 'startTime', 'endTime', 'time', 'date', 'state'],
+            attributes:['id', 'name', 'code', 'phone', 'deposit', 'email', 'startTime', 'endTime', 'time', 'date', 'state'],
             include: [
                 {
                     association: 'Bank',

@@ -1,31 +1,37 @@
 import { Request, Response } from "express";
 import { ClaimService } from "../service/claim.service";
-import { error } from "console";
+import { count, error } from "console";
 
 export class ClaimController {
     constructor(){
 
     }
 
-    async getAll(req: Request, res:Response){
+    async getAll(req: Request, res: Response) {
         const dataUser: any = req.headers.dataUser;
         const claimService = new ClaimService(dataUser.name);
-
+      
+        const limit = parseInt(req.body.limit as string) || 10;
+        const offset = parseInt(req.body.offset as string) || 0;
+      
         try {
-            const data = await claimService.getAll();
-            return res.status(200).json({
-                ok: true,
-                error: null,
-                data
-            })
+          const data = await claimService.getAll(limit, offset);
+          return res.status(200).json({
+            ok: true,
+            error: null,
+            data: data.rows,
+            count: data.count
+            
+          });
         } catch (error) {
-            console.error("ERROR: ",error)
-            return res.status(400).json({
-                ok: false,
-                error
-            })
+          console.error("ERROR: ", error);
+          return res.status(400).json({
+            ok: false,
+            error
+          });
         }
-    }
+      }
+      
 
     async create(req: Request, res:Response){
         const title = req.body.title;

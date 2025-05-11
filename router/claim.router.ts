@@ -5,8 +5,8 @@ import { tokenVerify } from "../middleware/auth.middleware";
 const routerClaim = Router();
 const claimController = new ClaimController();
 
-routerClaim.get('/getAll', tokenVerify, claimController.getAll);
-routerClaim.post('/create', tokenVerify, claimController.create);
+routerClaim.post('/getAll', tokenVerify, claimController.getAll);
+routerClaim.post('/create', claimController.create);
 routerClaim.post('/findByCodeReservation', tokenVerify, claimController.findByCodeReservation);
 routerClaim.post('/findByValue', tokenVerify, claimController.findByValue);
 

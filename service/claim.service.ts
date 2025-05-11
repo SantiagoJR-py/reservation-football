@@ -35,19 +35,23 @@ export class ClaimService {
         }
     }
 
-    async getAll(){
-        const claim = await Claim.findAll({
-            attributes: ['id', 'title', 'description', 'state'],
-            include: [
-                {
-                    association: 'Reservation',
-                    attributes: ['id', 'name', 'phone', 'code', 'deposit', 'startTime', 'endTime', 'time'], 
-                }
-            ]
-        }) 
-        
+    async getAll(limit: number, offset: number) {
+        const claim = await Claim.findAndCountAll({
+          limit,
+          offset,
+          order: [['createdAt', 'DESC']],
+          attributes: ['id', 'title', 'description', 'state', 'createdAt'],
+          include: [
+            {
+              association: 'Reservation',
+              attributes: ['id', 'name', 'phone', 'code', 'deposit', 'startTime', 'endTime', 'time', 'date'], 
+            }
+          ]
+        });
+      
         return claim;
-    }
+      }
+      
 
     async findByCodeReservation(code:string){
         const claim = await Claim.findOne({
