@@ -4,6 +4,7 @@ import User from "./user.model";
 import Bank from "./bank.model";
 import Session from "./session.model";
 import ReservationDocument from "./reservation-document.model";
+import SportCourt from "./sport-court.model";
 
 export class Reservation extends Model {
     public id!:number;
@@ -15,6 +16,7 @@ export class Reservation extends Model {
     public code!:string;
     public deposit!:number;
     public bankId!:number;
+    public sportCourtId!:number;
     public date!: Date;
     public state!:string;
     public startTime!:string;
@@ -65,6 +67,10 @@ Reservation.init({
         allowNull: false,
     },
     bankId:{
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    sportCourtId:{
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -135,6 +141,11 @@ export function setupReservationRelationships() {
     Reservation.belongsTo(Bank, {
         foreignKey: 'bankId',
         as: 'Bank'
+    });
+
+    Reservation.belongsTo(SportCourt, {
+        foreignKey: 'sportCourtId',
+        as: 'SportCourt'
     });
 
     Reservation.hasMany(ReservationDocument, {

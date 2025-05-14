@@ -10,6 +10,7 @@ const user_model_1 = __importDefault(require("./user.model"));
 const bank_model_1 = __importDefault(require("./bank.model"));
 const session_model_1 = __importDefault(require("./session.model"));
 const reservation_document_model_1 = __importDefault(require("./reservation-document.model"));
+const sport_court_model_1 = __importDefault(require("./sport-court.model"));
 class Reservation extends sequelize_1.Model {
 }
 exports.Reservation = Reservation;
@@ -48,6 +49,10 @@ Reservation.init({
         allowNull: false,
     },
     bankId: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false
+    },
+    sportCourtId: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false
     },
@@ -113,6 +118,10 @@ function setupReservationRelationships() {
     Reservation.belongsTo(bank_model_1.default, {
         foreignKey: 'bankId',
         as: 'Bank'
+    });
+    Reservation.belongsTo(sport_court_model_1.default, {
+        foreignKey: 'sportCourtId',
+        as: 'SportCourt'
     });
     Reservation.hasMany(reservation_document_model_1.default, {
         foreignKey: 'reservationId',

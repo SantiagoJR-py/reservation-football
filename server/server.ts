@@ -16,6 +16,8 @@ import routerReservation from '../router/reservation.router';
 import routerReservationDocument from '../router/reservation-document.router';
 import Claim, { setupClaimRelationships } from '../model/claim.model';
 import routerClaim from '../router/claim.router';
+import SportCourt from '../model/sport-court.model';
+import routerSportCourt from '../router/sport-court.router';
 
 // Cargar variables del archivo .env
 dotenv.config();
@@ -48,6 +50,7 @@ routes(){
   this.app.use('/app/reservation', routerReservation);
   this.app.use('/app/reservationDocument', routerReservationDocument);
   this.app.use('/app/claim', routerClaim);
+  this.app.use('/app/sportCourt', routerSportCourt);
 }
 
 middlewares() {
@@ -67,6 +70,7 @@ syncDatabase = async () => {
     await User.sync({ force: false });  
     await Session.sync({ force: false }); 
     await Bank.sync({ force: false });
+    await SportCourt.sync({ force: false });
     await Reservation.sync({ force: false }); 
     await ReservationDocument.sync({ force: false });
     await Claim.sync({ force: false });
