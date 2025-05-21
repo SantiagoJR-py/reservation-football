@@ -56,6 +56,7 @@ const claim_router_1 = __importDefault(require("../router/claim.router"));
 const sport_court_model_1 = __importDefault(require("../model/sport-court.model"));
 const sport_court_router_1 = __importDefault(require("../router/sport-court.router"));
 const company_model_1 = __importDefault(require("../model/company.model"));
+const company_routes_1 = __importDefault(require("../router/company.routes"));
 // Cargar variables del archivo .env
 dotenv_1.default.config();
 class Server {
@@ -104,12 +105,13 @@ class Server {
         this.app.use('/app/reservationDocument', reservation_document_router_1.default);
         this.app.use('/app/claim', claim_router_1.default);
         this.app.use('/app/sportCourt', sport_court_router_1.default);
+        this.app.use('/app/company', company_routes_1.default);
     }
     middlewares() {
         this.app.use('/uploads', express_1.default.static(path_1.default.resolve(__dirname, '../../uploads')));
         this.app.use(express_1.default.json());
         const corsOptions = {
-            // origin: 'http://localhost:4200',
+            origin: 'http://localhost:4200',
             optionsSuccessStatus: 200
         };
         this.app.use((0, cors_1.default)(corsOptions));

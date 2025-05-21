@@ -107,7 +107,6 @@ class UserController {
     }
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
             const { fullName, username, password, email } = req.body;
             const hashedPassword = yield bcrypt_1.default.hash(password, 10);
             const user = { name: fullName, username, password: hashedPassword, email, role: 'USER' };

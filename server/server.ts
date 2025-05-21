@@ -19,6 +19,7 @@ import routerClaim from '../router/claim.router';
 import SportCourt from '../model/sport-court.model';
 import routerSportCourt from '../router/sport-court.router';
 import Company from '../model/company.model';
+import routerCompany from '../router/company.routes';
 
 // Cargar variables del archivo .env
 dotenv.config();
@@ -52,13 +53,14 @@ routes(){
   this.app.use('/app/reservationDocument', routerReservationDocument);
   this.app.use('/app/claim', routerClaim);
   this.app.use('/app/sportCourt', routerSportCourt);
+  this.app.use('/app/company', routerCompany);
 }
 
 middlewares() {
   this.app.use('/uploads', express.static(path.resolve(__dirname, '../../uploads')));
   this.app.use(express.json());
   const corsOptions = {
-    // origin: 'http://localhost:4200',
+    origin: 'http://localhost:4200',
     optionsSuccessStatus: 200
   };
   this.app.use(cors(corsOptions));

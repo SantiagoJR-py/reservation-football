@@ -110,7 +110,6 @@ export class UserController {
   
 
   async createUser(req: Request, res: Response) {
-    console.log(req.body);
     const { fullName, username, password, email } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = { name: fullName, username, password: hashedPassword, email, role: 'USER'};

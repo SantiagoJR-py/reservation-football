@@ -24,7 +24,7 @@ export class UserService {
         try {
             const user:any = await User.findOne({
                 where: { email },
-                attributes: ['id', 'username', 'email', 'name', 'password', 'role']
+                attributes: ['id', 'username', 'email', 'name', 'password', 'role', 'companyId']
             });
             return user?.get({ plain: true});
         } catch (error) {
@@ -104,7 +104,7 @@ export class UserService {
         throw new Error('Password Invalid');
       }
     
-      const token = jwtService.generateToken({id: user.id, name: user.name, email: user.email, role: user.role})
+      const token = jwtService.generateToken({id: user.id, name: user.name, email: user.email, role: user.role, companyId: user.companyId})
       return {token, user};
     }
 }

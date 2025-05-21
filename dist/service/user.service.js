@@ -36,7 +36,7 @@ class UserService {
             try {
                 const user = yield user_model_1.default.findOne({
                     where: { email },
-                    attributes: ['id', 'username', 'email', 'name', 'password', 'role']
+                    attributes: ['id', 'username', 'email', 'name', 'password', 'role', 'companyId']
                 });
                 return user === null || user === void 0 ? void 0 : user.get({ plain: true });
             }
@@ -112,7 +112,7 @@ class UserService {
             if (!isPasswordValid) {
                 throw new Error('Password Invalid');
             }
-            const token = jwtService.generateToken({ id: user.id, name: user.name, email: user.email, role: user.role });
+            const token = jwtService.generateToken({ id: user.id, name: user.name, email: user.email, role: user.role, companyId: user.companyId });
             return { token, user };
         });
     }
