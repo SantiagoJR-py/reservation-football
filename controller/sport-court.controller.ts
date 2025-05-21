@@ -6,6 +6,7 @@ export class SportCourtController {
 
     async addSportCourt(req: Request, res: Response) {
         const dataUser: any = req.headers.dataUser;
+        const sportCourt:any = req.body.sportCourt;
         
         if (!req.body.sportCourt) {
             return res.status(400).json({
@@ -16,14 +17,14 @@ export class SportCourtController {
         const sportCourtService = new SportCourtService(dataUser.email);
         try {
             const newSportCourt = {
-                ...req.body.sportCourt,
+                sportCourt,
                 createdBy: dataUser.email,
                 updatedBy: dataUser.email
             };
 
-            const sportCourt = await sportCourtService.addSportCourt(newSportCourt);
+            const data = await sportCourtService.addSportCourt(newSportCourt);
 
-            if (!sportCourt) {
+            if (!data) {
                 return res.status(400).json({
                     msg: "Datos de cancha deportiva inválidos"
                 });
@@ -113,6 +114,24 @@ export class SportCourtController {
         const sportCourtService = new SportCourtService('system');
         try {
             const sportCourts = await sportCourtService.getAll();
+
+            return res.status(200).json({
+                ok: true,
+                data: sportCourts
+            });
+        } catch (error) {
+            console.error('Error finding sport courts:', error);
+            return res.status(500).json({
+                message: 'Ocurrió un error al buscar las canchas deportivas',
+                error: error instanceof Error ? error.message : 'Error desconocido'
+            }); 
+        }
+    }
+
+    async getAllByForm(req: Request, res: Response) {
+        const sportCourtService = new SportCourtService('system');
+        try {
+            const sportCourts = await sportCourtService.getAllByForm();
 
             return res.status(200).json({
                 ok: true,

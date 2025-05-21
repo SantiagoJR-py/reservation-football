@@ -6,8 +6,9 @@ const routerSportCourt = Router();
 const sportCourtController = new SportCourtController();
 
 // Rutas públicas
-routerSportCourt.get('/', sportCourtController.getAll);
+routerSportCourt.get('/getAllByForm', sportCourtController.getAllByForm);
 
+routerSportCourt.get('/', tokenVerify, sportCourtController.getAll);
 routerSportCourt.post('/create', tokenVerify, sportCourtController.addSportCourt);
 routerSportCourt.put('/:sportCourtId/edit', tokenVerify, sportCourtController.editSportCourt);
 routerSportCourt.delete('/:sportCourtId/delete', tokenVerify, sportCourtController.deleteSportCourt);

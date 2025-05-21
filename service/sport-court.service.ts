@@ -15,10 +15,20 @@ export class SportCourtService {
         return sportCourts;
     }
 
-    async addSportCourt(sportCourtData: Omit<SportCourtInteface, 'id' | 'updatedAt' | 'deletionAt'>) {
+    async getAllByForm() {
+        const sportCourts = await SportCourt.findAll({
+            attributes: ['id', 'name']
+        });
+        return sportCourts;
+    }
+
+    async addSportCourt(sportCourtData: any) {
+        console.log("DATOS: ",sportCourtData);
         try {
             const newSportCourt = await SportCourt.create({
-                ...sportCourtData,
+                name: sportCourtData.sportCourt.name,
+                size: sportCourtData.sportCourt.size,
+                state: sportCourtData.sportCourt.state,
                 createdAt: new Date(),
                 createdBy: this.currentUserEmail,
                 updatedBy: this.currentUserEmail
@@ -30,13 +40,17 @@ export class SportCourtService {
         }
     }
 
-    async editSportCourt(id: number, updateData: Partial<SportCourtInteface>) {
+    async editSportCourt(id: number, updateData: any) {
+        console.log("DATA: ",updateData)
         const sportCourt = await this.getById(id);
         
         try {
             const updatedSportCourt = await sportCourt.update({
-                ...updateData,
-                updatedBy: this.currentUserEmail
+                name: updateData.name,
+                size: updateData.size,
+                state: updateData.state,
+                updatedBy: this.currentUserEmail,
+                updatedAt: new Date()
             });
             
             this.sportCourt = updatedSportCourt;

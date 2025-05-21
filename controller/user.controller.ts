@@ -113,7 +113,7 @@ export class UserController {
     console.log(req.body);
     const { fullName, username, password, email } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { name: fullName, username, password: hashedPassword, email };
+    const user = { name: fullName, username, password: hashedPassword, email, role: 'USER'};
 
     try {
       const userServices = new UserService();
