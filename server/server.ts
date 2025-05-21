@@ -18,6 +18,7 @@ import Claim, { setupClaimRelationships } from '../model/claim.model';
 import routerClaim from '../router/claim.router';
 import SportCourt from '../model/sport-court.model';
 import routerSportCourt from '../router/sport-court.router';
+import Company from '../model/company.model';
 
 // Cargar variables del archivo .env
 dotenv.config();
@@ -57,7 +58,7 @@ middlewares() {
   this.app.use('/uploads', express.static(path.resolve(__dirname, '../../uploads')));
   this.app.use(express.json());
   const corsOptions = {
-    origin: 'http://localhost:4200',
+    // origin: 'http://localhost:4200',
     optionsSuccessStatus: 200
   };
   this.app.use(cors(corsOptions));
@@ -68,6 +69,7 @@ syncDatabase = async () => {
   try {
     // await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await User.sync({ force: false });  
+    await Company.sync({ force: false })
     await Session.sync({ force: false }); 
     await Bank.sync({ force: false });
     await SportCourt.sync({ force: false });

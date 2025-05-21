@@ -55,6 +55,7 @@ const claim_model_1 = __importStar(require("../model/claim.model"));
 const claim_router_1 = __importDefault(require("../router/claim.router"));
 const sport_court_model_1 = __importDefault(require("../model/sport-court.model"));
 const sport_court_router_1 = __importDefault(require("../router/sport-court.router"));
+const company_model_1 = __importDefault(require("../model/company.model"));
 // Cargar variables del archivo .env
 dotenv_1.default.config();
 class Server {
@@ -63,6 +64,7 @@ class Server {
             try {
                 // await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
                 yield user_model_1.default.sync({ force: false });
+                yield company_model_1.default.sync({ force: false });
                 yield session_model_1.default.sync({ force: false });
                 yield bank_model_1.default.sync({ force: false });
                 yield sport_court_model_1.default.sync({ force: false });
@@ -107,7 +109,7 @@ class Server {
         this.app.use('/uploads', express_1.default.static(path_1.default.resolve(__dirname, '../../uploads')));
         this.app.use(express_1.default.json());
         const corsOptions = {
-            origin: 'http://localhost:4200',
+            // origin: 'http://localhost:4200',
             optionsSuccessStatus: 200
         };
         this.app.use((0, cors_1.default)(corsOptions));

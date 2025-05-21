@@ -110,7 +110,7 @@ class UserController {
             console.log(req.body);
             const { fullName, username, password, email } = req.body;
             const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-            const user = { name: fullName, username, password: hashedPassword, email };
+            const user = { name: fullName, username, password: hashedPassword, email, role: 'USER' };
             try {
                 const userServices = new user_service_1.UserService();
                 yield userServices.createUser(user);
