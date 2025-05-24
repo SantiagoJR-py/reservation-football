@@ -10,5 +10,6 @@ routerCompany.get('/findByNit/:nit', tokenVerify, CompanyController.findByNIT);
 routerCompany.post('/create', tokenVerify, CompanyController.create);
 routerCompany.post('/update', tokenVerify, CompanyController.update);
 routerCompany.post('/delete/:id', tokenVerify, CompanyController.delete);
+routerCompany.post('/findByCode', CompanyController.findByCode);
 
 export default routerCompany;
