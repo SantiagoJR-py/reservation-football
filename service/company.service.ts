@@ -20,6 +20,16 @@ export class CompanyService {
         return company;
     }
 
+    async findByCode(code: string){
+        const company = await Company.findOne({
+            where: {
+                code
+            }
+        })
+
+        return company;
+    }
+
     async getById(id: number){
         const company = await Company.findByPk(id);
 
@@ -70,7 +80,7 @@ export class CompanyService {
         this.company.address = data.address,
         this.company.phone = data.phone,
         this.company.email = data.email,
-        this.company.NIT = data.nit,
+        this.company.NIT = data.NIT,
         this.company.updatedBy = this.currentUserEmail,
         this.company.updatedAt = new Date()
 
