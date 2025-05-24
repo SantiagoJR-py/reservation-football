@@ -1,15 +1,19 @@
 import { Request, Response } from "express";
 import { ReservationService } from "../service/reservation.service";
 import { SessionService } from "../service/session.service";
+import { CompanyService } from "../service/company.service";
 
 export class ReservationController {
   constructor() {}
 
   async create(req: Request, res: Response) {
+    const code = req.params.code as string
+
     const name = req.body.name;
-    const email = req.body.email;
+    const discountCode = req.body.discountCode;
     const phone = req.body.phone;
     const bankId = Number(req.body.bankId);
+    const sportCourtId = Number(req.body.typeCourt);
     const deposit = req.body.deposit;
     const date = req.body.date;
     const startTime = req.body.startTime;
@@ -17,9 +21,21 @@ export class ReservationController {
     const time = req.body.time;
     const fingerPrint = req.body.session;
 
+    if(!name || ! phone || !bankId || !sportCourtId || !deposit || !date || !startTime || !endTime || !time){
+      throw new Error("Missing required fields: name, date, startTime, endTime, time, phone, email, sportCourtId");
+    }
+
     try {
       const reservationService = new ReservationService(name);
+      const companyService = new CompanyService('System');
       const sessionService = new SessionService("System");
+
+      const company = await companyService.findByCode(code);
+
+      if(!company){
+        throw new Error('Code Company Not Found');
+      }
+
       const session: any = await sessionService.findByFingerPrint(fingerPrint);
       const sessionId = Number(session.id);
 
@@ -27,12 +43,14 @@ export class ReservationController {
         name,
         deposit,
         bankId,
+        sportCourtId,
+        Number(company.id),
         date,
         startTime,
         endTime,
         time,
-        email,
         phone,
+        discountCode,
         sessionId,
         null
       );
@@ -51,11 +69,14 @@ export class ReservationController {
 
   async createToken(req: Request, res: Response) {
     const dataUser: any = req.headers.dataUser;
+    console.log("DATA: ",dataUser)
+    const code = req.params.code as string
 
     const name = req.body.name;
-    const email = req.body.email;
+    const discountCode = req.body.discountCode;
     const phone = req.body.phone;
     const bankId = Number(req.body.bankId);
+    const sportCourtId = Number(req.body.typeCourt);
     const deposit = req.body.deposit;
     const date = req.body.date;
     const startTime = req.body.startTime;
@@ -63,8 +84,20 @@ export class ReservationController {
     const time = req.body.time;
     const fingerPrint = req.body.session;
 
+    if(!name || ! phone || !bankId || !sportCourtId || !deposit || !date || !startTime || !endTime || !time){
+      throw new Error("Missing required fields: name, date, startTime, endTime, time, phone, email, sportCourtId");
+    }
+
+
     try {
       const reservationService = new ReservationService(name);
+      const companyService = new CompanyService('System');
+      const company = await companyService.findByCode(code);
+
+      if(!company){
+        throw new Error('Code Company Not Found');
+      }
+
       const sessionService = new SessionService("System");
       if (!dataUser) {
         await sessionService.findByFingerPrint(fingerPrint);
@@ -77,12 +110,14 @@ export class ReservationController {
         name,
         deposit,
         bankId,
+        sportCourtId,
+        Number(company?.id),
         date,
         startTime,
         endTime,
         time,
-        email,
         phone,
+        discountCode,
         null,
         Number(dataUser.id)
       );
@@ -130,7 +165,7 @@ export class ReservationController {
     const page = Number(req.body.page) || 1;
 
     try {
-      const { reservations, total } = await reservationService.getAll(limit, page);
+      const { reservations, total } = await reservationService.getAll(limit, page, Number(dataUser.companyId));
 
       return res.status(200).json({
         Ok: true,
