@@ -101,6 +101,29 @@ export class CompanyController {
     }
   }
 
+  static async findByCode(req:Request, res:Response){
+    const code = req.body.code as string
+
+    const companyService = new CompanyService('System');
+
+    try {
+      const company = await companyService.findByCode(code);
+      if(!company){
+        return res.status(404).json({
+          ok: false,
+          msg: 'Not Found Company'
+        })
+      }
+
+      return res.status(200).json({
+        ok: true,
+        msg: 'Found Company'
+      })
+    } catch (error) {
+      console.error("ERROR: ",error)
+    }
+  }
+
   static async delete(req: Request, res: Response) {
     const dataUser: any = req.headers.dataUser;
 
