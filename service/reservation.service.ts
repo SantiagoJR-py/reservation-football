@@ -10,16 +10,24 @@ export class ReservationService {
         this.currentUserEmail = currentUserName;
     }
 
-    async getAll(limit: number = 10, page: number = 1) {
+    async getAll(limit: number = 10, page: number = 1, companyId: number) {
         // Contar el total de reservaciones
         const total = await Reservation.count();
         
         const reservations = await Reservation.findAll({
-            attributes: ['id', 'name', 'phone', 'email', 'deposit', 'state', 'date', 'startTime', 'endTime','time', 'code'],
+            where:{
+                companyId
+            },
+            
+            attributes: ['id', 'name', 'phone', 'deposit', 'state', 'date', 'startTime', 'endTime','time', 'code'],
             include: [
                 {
                     association: 'Bank',
                     attributes: ['id', 'name']
+                },
+                {
+                    association: 'Company',
+                    attributes: ['id', 'name', 'code']
                 }
             ],
             order: [['createdAt', 'DESC']],
@@ -69,18 +77,20 @@ export class ReservationService {
         name: string,
         deposit: number,
         bankId: number,
+        sportCourtId: number,
+        companyId: number,
         date: Date,
         startTime: string,
         endTime: string,
         time: string,
-        email:string,
         phone:string,
+        discountCode?:string | null,
         sessionId?: number | null,
         userId?: number | null,
     ): Promise<Reservation> {
 
-        if (!name || !date || !startTime || !endTime || !time || !phone || !email) {
-            throw new Error("Missing required fields: name, date, startTime, endTime, time, phone, email");
+        if (!name || !date || !startTime || !endTime || !time || !phone || !sportCourtId || !companyId) {
+            throw new Error("Missing required fields: name, date, startTime, endTime, time, phone, email, sportCourtId, companyId");
         }
 
         const code = this.generateShortCode();
@@ -91,13 +101,15 @@ export class ReservationService {
                 name,
                 deposit: deposit || null,
                 bankId: bankId || null,
+                sportCourtId,
+                companyId,
                 date,
                 state: 'PENDING',
                 startTime,
                 endTime,
                 code,
                 time,
-                email,
+                discountCode,
                 phone,
                 createdBy: this.currentUserEmail,
                 createdAt: new Date(),

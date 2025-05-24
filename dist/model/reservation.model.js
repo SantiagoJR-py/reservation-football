@@ -11,6 +11,7 @@ const bank_model_1 = __importDefault(require("./bank.model"));
 const session_model_1 = __importDefault(require("./session.model"));
 const reservation_document_model_1 = __importDefault(require("./reservation-document.model"));
 const sport_court_model_1 = __importDefault(require("./sport-court.model"));
+const company_model_1 = __importDefault(require("./company.model"));
 class Reservation extends sequelize_1.Model {
 }
 exports.Reservation = Reservation;
@@ -32,9 +33,9 @@ Reservation.init({
         type: sequelize_1.DataTypes.STRING(255),
         allowNull: false,
     },
-    email: {
+    discountCode: {
         type: sequelize_1.DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true,
     },
     phone: {
         type: sequelize_1.DataTypes.STRING(255),
@@ -53,6 +54,10 @@ Reservation.init({
         allowNull: false
     },
     sportCourtId: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false
+    },
+    companyId: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false
     },
@@ -118,6 +123,10 @@ function setupReservationRelationships() {
     Reservation.belongsTo(bank_model_1.default, {
         foreignKey: 'bankId',
         as: 'Bank'
+    });
+    Reservation.belongsTo(company_model_1.default, {
+        foreignKey: 'companyId',
+        as: 'Company'
     });
     Reservation.belongsTo(sport_court_model_1.default, {
         foreignKey: 'sportCourtId',

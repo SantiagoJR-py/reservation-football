@@ -5,18 +5,20 @@ import Bank from "./bank.model";
 import Session from "./session.model";
 import ReservationDocument from "./reservation-document.model";
 import SportCourt from "./sport-court.model";
+import Company from "./company.model";
 
 export class Reservation extends Model {
     public id!:number;
     public userId?:number;
     public sessionId?:number;
     public name!:string;
-    public email!:string;
+    public discountCode?:string;
     public phone!:string;
     public code!:string;
     public deposit!:number;
     public bankId!:number;
     public sportCourtId!:number;
+    public companyId!:number;
     public date!: Date;
     public state!:string;
     public startTime!:string;
@@ -50,9 +52,9 @@ Reservation.init({
         type: DataTypes.STRING(255),
         allowNull:false,
     },
-    email : {
+    discountCode : {
         type: DataTypes.STRING(255),
-        allowNull:false,
+        allowNull: true,
     },
     phone : {
         type: DataTypes.STRING(255),
@@ -71,6 +73,10 @@ Reservation.init({
         allowNull: false
     },
     sportCourtId:{
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    companyId:{
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -143,6 +149,11 @@ export function setupReservationRelationships() {
         as: 'Bank'
     });
 
+    Reservation.belongsTo(Company, {
+        foreignKey: 'companyId',
+        as: 'Company'
+    });
+    
     Reservation.belongsTo(SportCourt, {
         foreignKey: 'sportCourtId',
         as: 'SportCourt'
